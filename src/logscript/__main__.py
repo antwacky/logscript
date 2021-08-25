@@ -58,6 +58,8 @@ class LogScript:
 
     def _worker(self, rule):
 
+        occurences = 0
+
         try:
             tail = sh.tail('-n0', '-f', rule.glob, _iter=True, _bg=True, _bg_exc=False)
             self.tails.append(tail)
@@ -65,6 +67,11 @@ class LogScript:
             for line in tail:
 
                 if rule.regex.match(line.strip()):
+
+                    occurences += 1
+
+                    if occurences != rule.occurences:
+                        continue
 
                     try:
                         self.scripts[rule.script](rule, line)
@@ -75,6 +82,9 @@ class LogScript:
 
                     except Exception as e:
                         log.exception('rule "{0}" triggered, but script failed with error'.format(rule.name))
+
+                    finally:
+                        occurences = 0
 
         except sh.SignalException_SIGTERM:
             pass
