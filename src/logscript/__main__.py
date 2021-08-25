@@ -93,7 +93,6 @@ class LogScript:
         for rule in self.rules:
             p = multiprocessing.Process(target=self._worker, daemon=True, args=(rule,))
             self.procs.append(p)
-            p.shutdown = False
             p.start()
 
         for p in self.procs:
@@ -105,13 +104,6 @@ class LogScript:
 
         for t in self.tails:
             t.terminate()
-
-        return
-
-    def restart(self):
-
-        self.stop()
-        self.start()
 
         return
 
