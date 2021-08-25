@@ -61,7 +61,7 @@ class LogScript:
         occurences = 0
 
         try:
-            tail = sh.tail('-n0', '-f', rule.glob, _iter=True, _bg=True, _bg_exc=False)
+            tail = sh.tail('-n0', '-f', '-q', rule.glob, _iter=True, _bg=True, _bg_exc=False)
             self.tails.append(tail)
 
             for line in tail:
