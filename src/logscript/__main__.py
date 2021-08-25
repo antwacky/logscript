@@ -71,7 +71,7 @@ class LogScript:
                         log.info('rule "{0}" triggered'.format(rule.name))
 
                     except KeyError:
-                        log.fatal('rule "{0}" triggered, but script does not exist (thread exited)'.format(rule.name))
+                        log.fatal('rule "{0}" triggered, but script does not exist'.format(rule.name))
 
                     except Exception as e:
                         log.exception('rule "{0}" triggered, but script failed with error'.format(rule.name))
