@@ -4,7 +4,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-Restart=always
+Restart=never
 ExecStart=/usr/bin/env python3 -m logscript
 
 [Install]

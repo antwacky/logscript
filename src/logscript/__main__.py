@@ -8,13 +8,14 @@ import inspect
 import json
 import signal
 import importlib
+import glob
 
 class Rule:
 
      def __init__(self, rule):
 
          self.name = rule['name']
-         self.glob = rule['glob']
+         self.glob = glob.glob(rule['glob'])
          self.occurences = rule['occurences']
          self.regex = re.compile(rule['regex'])
          self.script = rule['script']
@@ -29,17 +30,25 @@ class LogScript:
         self.tails = []
         self.rule_directory = rule_directory
         self.script_directory = script_directory
-        self.rules = self.load_rules()
-        self.scripts = self.load_scripts()
+        self.rules = []
+        self.scripts = {}
 
     def load_rules(self):
 
         rules = []
         for rule in os.listdir(self.rule_directory):
-            rule = json.load(open('{0}/{1}'.format(self.rule_directory, rule)))
+
+            try:
+                rule = json.load(open('{0}/{1}'.format(self.rule_directory, rule)))
+            except json.decoder.JSONDecodeError:
+                log.exception('rule file {0} is invalid JSON'.format(rule))
+                return
+
             rules.append(Rule(rule))
 
-        return rules
+        self.rules = rules
+
+        return
 
     def load_scripts(self):
 
@@ -49,12 +58,20 @@ class LogScript:
 
         for script in os.listdir(self.script_directory):
             script = script.split('.')[0]
-            m = __import__(script)
+
+            try:
+                m = __import__(script)
+            except SyntaxError:
+                log.exception('script file {0}.py has syntax error'.format(script))
+                return
+
             fs = inspect.getmembers(m, inspect.isfunction)
             for f in fs:
                 scripts[f[0]] = f[1]
 
-        return scripts
+        self.scripts = scripts
+
+        return
 
     def _worker(self, rule):
 
@@ -74,8 +91,9 @@ class LogScript:
                         continue
 
                     try:
-                        self.scripts[rule.script](rule, line)
                         log.info('rule "{0}" triggered'.format(rule.name))
+                        result = self.scripts[rule.script](rule, line)
+                        log.info('rule "{0}" responded with "{1}"'.format(rule.name, result))
 
                     except KeyError:
                         log.fatal('rule "{0}" triggered, but script does not exist'.format(rule.name))
@@ -130,4 +148,11 @@ if __name__ == '__main__':
     log.addHandler(handler)
 
     ls = LogScript()
-    ls.start()
+
+    try:
+        ls.load_rules()
+        ls.load_scripts()
+        ls.start()
+    except:
+        log.exception('failed to start')
+        sys.exit(1)
