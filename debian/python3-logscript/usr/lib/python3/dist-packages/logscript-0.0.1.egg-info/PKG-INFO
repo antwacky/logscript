@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: logscript
+Version: 0.0.1
+Summary: Log event processor
+Home-page: https://github.com/pagey101/logscript
+Author: Matt Page
+Author-email: pagey101@hotmail.co.uk
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/pagey101/logscript/issues
+Description: # Log Script
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

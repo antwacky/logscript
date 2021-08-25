@@ -1,0 +1,12 @@
+Package: python-logscript-doc
+Source: logscript
+Version: 0.0.1-1
+Architecture: all
+Maintainer: pagey101 <pagey101@hotmail.co.uk>
+Installed-Size: 9
+Section: doc
+Priority: optional
+Homepage: <insert the upstream URL, if relevant>
+Description: Log event processor (common documentation)
+ .
+ This is the common documentation package.

@@ -1,0 +1,26 @@
+Source: logscript
+Section: unknown
+Priority: optional
+Maintainer: pagey101 <pagey101@hotmail.co.uk>
+Build-Depends: debhelper-compat (= 12), dh-python, python3-setuptools, python3-all
+Standards-Version: 4.4.1
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Browser: https://salsa.debian.org/debian/logscript
+#Vcs-Git: https://salsa.debian.org/debian/logscript.git
+#Testsuite: autopkgtest-pkg-python
+
+Package: python3-logscript
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}
+Suggests: python-logscript-doc
+Description: Log event processor (Python 3)
+ .
+ This package installs the library for Python 3.
+
+Package: python-logscript-doc
+Architecture: all
+Section: doc
+Depends: ${sphinxdoc:Depends}, ${misc:Depends}
+Description: Log event processor (common documentation)
+ .
+ This is the common documentation package.
