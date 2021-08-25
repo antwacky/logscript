@@ -119,6 +119,7 @@ class LogScript:
 
 if __name__ == '__main__':
 
+    logging.getLogger("sh").setLevel(logging.WARNING)
     log = logging.getLogger()
     log.setLevel(logging.DEBUG)
 
