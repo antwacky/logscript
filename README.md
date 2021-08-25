@@ -101,26 +101,17 @@ dpkg-buildpackage
 
 To make modifications:
 
-Extract the distribution archive
+1. Extract the distribution archive
 
 ```
 tar -xvzf dist/logscript-0.0.1.tar.gz
 ```
 
-Make the necessary changes.
+2. Make the necessary changes
 
-Generate the build configuration
+3. Update debian/changelog with details of change
 
-```
-dh_make -p logscript_0.0.2 -f dist/logscript-0.0.1.tar.gz -e <your_email>
-```
-
-Update Debian files:
-
-1. Edit debian/control and add details of changes
-2. Edit debian/changelog and update 'unknown' with your GPG key identity
-
-Rebuild the package
+4. Rebuild the package
 
 ```
 dpkg-buildpackage -b
