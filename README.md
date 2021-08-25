@@ -18,10 +18,10 @@ They are json formatted as follows:
 }
 ```
 
-**name**: A name for the rule, recorded in logs when triggered
-**glob**: Glob match for log files the rule applies to
-**regex**: Regex pattern to look for, standard JSON special characters
-**occurences**: Number of times the rule must match before triggering
+**name**: A name for the rule, recorded in logs when triggered\
+**glob**: Glob match for log files the rule applies to\
+**regex**: Regex pattern to look for, standard JSON special characters\
+**occurences**: Number of times the rule must match before triggering\
 **script**: The script to run when the rule triggers
 
 ## Scripts
@@ -44,7 +44,7 @@ def helloworld(rule, line):
 
 Scripts are passed two variables:
 
-**rule**: The full rule object
+**rule**: The full rule object\
 **line**: The log line that triggered the rule
 
 These can then be used as required within the script (for example, adding the log line to an incident ticket).
@@ -92,7 +92,7 @@ The program was packaged into a debian package as shown below:
 
 ```
 python setup.py sdist
-dh_make -p logscript_0.0.1 -f dist/logscript-0.0.1.tar.gz -e pagey101@hotmail.co.uk
+dh_make -p logscript_0.0.1 -f dist/logscript-0.0.1.tar.gz -e <email>
 vi debian/changelog
 vi debian/control
 echo 'dist/logscript-0.0.1.tar.gz' > debian/source/include-binaries
