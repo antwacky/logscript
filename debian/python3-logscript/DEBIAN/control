@@ -3,7 +3,7 @@ Source: logscript
 Version: 0.0.1-1
 Architecture: all
 Maintainer: pagey101 <pagey101@hotmail.co.uk>
-Installed-Size: 31
+Installed-Size: 33
 Depends: python3-sh, python3:any
 Suggests: python-logscript-doc
 Section: unknown
