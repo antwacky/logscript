@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/logscript/__init__.py
+src/logscript/__main__.py
+src/logscript.egg-info/PKG-INFO
+src/logscript.egg-info/SOURCES.txt
+src/logscript.egg-info/dependency_links.txt
+src/logscript.egg-info/requires.txt
+src/logscript.egg-info/top_level.txt
