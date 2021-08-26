@@ -37,7 +37,7 @@ The 'script' referred to in a rule references the function name within the scrip
 For the example rule given earlier, a function named helloworld must be defined in any script file as below:
 
 ```
-def helloworld(rule, line):
+def helloworld(rule, line, match):
 
     print('hello world' + match.group('digit'))
 ```
