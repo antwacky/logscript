@@ -1,9 +1,9 @@
 e0d8bb48f62e77165247dba3a6888079  lib/systemd/system/python3-logscript.service
-5175be6a9ad18dd74db8b1634081017e  usr/lib/python3/dist-packages/logscript-0.0.1.egg-info/PKG-INFO
+bb466b8d37fa95f9b50ffd2998f1dd5f  usr/lib/python3/dist-packages/logscript-0.0.1.egg-info/PKG-INFO
 68b329da9893e34099c7d8ad5cb9c940  usr/lib/python3/dist-packages/logscript-0.0.1.egg-info/dependency_links.txt
 d41d8cd98f00b204e9800998ecf8427e  usr/lib/python3/dist-packages/logscript-0.0.1.egg-info/requires.txt
 8d94287010436b867264e0fdd96b2b35  usr/lib/python3/dist-packages/logscript-0.0.1.egg-info/top_level.txt
 d41d8cd98f00b204e9800998ecf8427e  usr/lib/python3/dist-packages/logscript/__init__.py
-f69146b526252391e8de13a4db635476  usr/lib/python3/dist-packages/logscript/__main__.py
+521484fada8ebd4f08adbf9a4bb0385d  usr/lib/python3/dist-packages/logscript/__main__.py
 5bd99b366f8c6916e44dc143a12467c9  usr/share/doc/python3-logscript/changelog.Debian.gz
 6f4323946e8e2ab9e9afb2bad929f693  usr/share/doc/python3-logscript/copyright

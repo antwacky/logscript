@@ -12,7 +12,7 @@ They are json formatted as follows:
 {
   "name": "test",
   "glob": "/var/log/test.log",
-  "regex": "^\\d$",
+  "regex": "^(?P<digit>\\d)$",
   "occurences": 1,
   "script": "helloworld"
 }
@@ -20,7 +20,7 @@ They are json formatted as follows:
 
 **name**: A name for the rule, recorded in logs when triggered\
 **glob**: Glob match for log files the rule applies to\
-**regex**: Regex pattern to look for, standard JSON special characters\
+**regex**: Regex pattern to look for, standard JSON special characters (capturing groups permitted)\
 **occurences**: Number of times the rule must match before triggering\
 **script**: The script to run when the rule triggers
 
@@ -39,13 +39,16 @@ For the example rule given earlier, a function named helloworld must be defined 
 ```
 def helloworld(rule, line):
 
-    print('hello world')
+    print('hello world' + match.group('digit'))
 ```
+
+This shows the 'digit' capturing group from the rule regex being used within the script.
 
 Scripts are passed two variables:
 
 **rule**: The full rule object\
 **line**: The log line that triggered the rule
+**match**: The re match object (use match.group('groupname') to use capturing groups)
 
 These can then be used as required within the script (for example, adding the log line to an incident ticket).
 

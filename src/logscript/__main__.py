@@ -83,7 +83,8 @@ class LogScript:
 
             for line in tail:
 
-                if rule.regex.match(line.strip()):
+                match = rule.regex.match(line.strip())
+                if match:
 
                     occurences += 1
 
@@ -92,7 +93,7 @@ class LogScript:
 
                     try:
                         log.info('rule "{0}" triggered'.format(rule.name))
-                        result = self.scripts[rule.script](rule, line)
+                        result = self.scripts[rule.script](rule, line, match)
                         log.info('rule "{0}" responded with "{1}"'.format(rule.name, result))
 
                     except KeyError:

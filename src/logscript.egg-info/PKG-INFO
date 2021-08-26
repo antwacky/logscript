@@ -55,6 +55,7 @@ Description: # Log Script
         
         **rule**: The full rule object\
         **line**: The log line that triggered the rule
+        **match**: The re match object (use match.group('name') to extract capturing groups)
         
         These can then be used as required within the script (for example, adding the log line to an incident ticket).
         
