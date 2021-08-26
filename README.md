@@ -44,10 +44,10 @@ def helloworld(rule, line):
 
 This shows the 'digit' capturing group from the rule regex being used within the script.
 
-Scripts are passed two variables:
+Scripts are passed three variables:
 
 **rule**: The full rule object\
-**line**: The log line that triggered the rule
+**line**: The log line that triggered the rule\
 **match**: The re match object (use match.group('groupname') to use capturing groups)
 
 These can then be used as required within the script (for example, adding the log line to an incident ticket).
