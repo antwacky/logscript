@@ -34,6 +34,14 @@ The filename is not relevant (although must be a .py Python file).
 
 The 'script' referred to in a rule references the function name within the script file, and not the script filename itself.
 
+Scripts are passed three variables:
+
+**rule**: The full rule object\
+**line**: The log line that triggered the rule\
+**match**: The re match object (use match.group('groupname') to use capturing groups)
+
+These can then be used as required within the script (for example, adding the log line to an incident ticket).
+
 For the example rule given earlier, a function named helloworld must be defined in any script file as below:
 
 ```
@@ -43,14 +51,6 @@ def helloworld(rule, line, match):
 ```
 
 This shows the 'digit' capturing group from the rule regex being used within the script.
-
-Scripts are passed three variables:
-
-**rule**: The full rule object\
-**line**: The log line that triggered the rule\
-**match**: The re match object (use match.group('groupname') to use capturing groups)
-
-These can then be used as required within the script (for example, adding the log line to an incident ticket).
 
 ## Installation
 
