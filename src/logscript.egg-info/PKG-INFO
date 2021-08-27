@@ -23,7 +23,8 @@ Description: # Log Script
           "glob": "/var/log/test.log",
           "regex": "^(?P<digit>\\d)$",
           "occurences": 1,
-          "script": "helloworld"
+          "script": "helloworld",
+          "cache_key": "$digit"
         }
         ```
         
@@ -31,7 +32,8 @@ Description: # Log Script
         **glob**: Glob match for log files the rule applies to\
         **regex**: Regex pattern to look for, standard JSON special characters (capturing groups permitted)\
         **occurences**: Number of times the rule must match before triggering\
-        **script**: The script to run when the rule triggers
+        **script**: The script to run when the rule triggers\
+        **cache_key**: A key to cache alerts by (using captured groups from the regex), cached alerts will not be triggered. Set to false to prevent caching.
         
         ## Scripts
         
@@ -60,6 +62,22 @@ Description: # Log Script
         ```
         
         This shows the 'digit' capturing group from the rule regex being used within the script.
+        
+        ## Caching
+        
+        A cached alert will not be triggered again until the cache is cleared.
+        
+        Alerts can be cached based on the regex capturing groups.
+        
+        For example, a rule has the following regex looking for a vulnerability in the logs:
+        
+        (?P<vulnerability>CVE.*)
+        
+        To cache this, based on only the extracted vulnerability, a cache_key can be set as below:
+        
+        $vulnerability
+        
+        The vulnerability will then be in the cache, and alerts will not be triggered again (although will be logged).
         
         ## Installation
         

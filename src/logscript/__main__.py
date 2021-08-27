@@ -168,7 +168,7 @@ class LogScript:
 
                             if key in cache.cache:
 
-                                log.info('rule "{0}" triggered but ignored (found in cache)'.format(rule.name))
+                                log.info('rule "{0}" ignored (found in cache)'.format(rule.name))
                                 occurences -= 1
                                 continue
 
