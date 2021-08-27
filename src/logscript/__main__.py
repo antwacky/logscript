@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sh
 import os
 import re
@@ -9,6 +11,7 @@ import json
 import signal
 import importlib
 import glob
+import pickle
 
 class Rule:
 
@@ -19,8 +22,50 @@ class Rule:
          self.occurences = rule['occurences']
          self.regex = re.compile(rule['regex'])
          self.script = rule['script']
+         self.cache_key = rule['cache_key']
 
          return
+
+class Cache:
+
+    def __init__(self, cache_file, cache_dir='/etc/logscript/cache'):
+
+        self.lock = multiprocessing.Lock()
+        self.cache_dir = cache_dir
+        self.cache_file = '{}/{}'.format(self.cache_dir, cache_file.replace(' ', ''))
+        self.cache = []
+
+        sh.mkdir('-p', self.cache_dir)
+
+    def add(self, obj):
+
+        with self.lock:
+
+            self.cache.append(obj)
+
+        return
+
+    def load(self):
+
+        try:
+            self.cache = pickle.load(open(self.cache_file, 'rb'))
+
+        except IOError:
+            self.cache = []
+
+        return
+
+    def save(self):
+
+        with self.lock:
+
+            try:
+                pickle.dump(self.cache, open(self.cache_file, 'wb'))
+
+            except FileNotFoundError:
+                log.warn('failed to save cache'.format(self.cache_file))
+
+        return
 
 class LogScript:
 
@@ -28,10 +73,12 @@ class LogScript:
 
         self.procs = []
         self.tails = []
-        self.rule_directory = rule_directory
-        self.script_directory = script_directory
+
         self.rules = []
         self.scripts = {}
+
+        self.rule_directory = rule_directory
+        self.script_directory = script_directory
 
     def load_rules(self):
 
@@ -40,6 +87,7 @@ class LogScript:
 
             try:
                 rule = json.load(open('{0}/{1}'.format(self.rule_directory, rule)))
+
             except json.decoder.JSONDecodeError:
                 log.exception('rule file {0} is invalid JSON'.format(rule))
                 return
@@ -61,11 +109,13 @@ class LogScript:
 
             try:
                 m = __import__(script)
+
             except SyntaxError:
                 log.exception('script file {0}.py has syntax error'.format(script))
                 return
 
             fs = inspect.getmembers(m, inspect.isfunction)
+
             for f in fs:
                 scripts[f[0]] = f[1]
 
@@ -75,6 +125,11 @@ class LogScript:
 
     def _worker(self, rule):
 
+        signal.signal(signal.SIGINT, lambda *x: None)
+        signal.signal(signal.SIGTERM, lambda *x: None)
+
+        cache = Cache(rule.name)
+        cache.load()
         occurences = 0
 
         try:
@@ -91,8 +146,36 @@ class LogScript:
                     if occurences != rule.occurences:
                         continue
 
+                    log.info('rule "{0}" triggered'.format(rule.name))
+
+                    if rule.cache_key:
+
+                        variables = re.findall('(?P<var>\$\w+)', rule.cache_key)
+
+                        key = rule.cache_key
+
+                        for variable in variables:
+
+                            try:
+                                key = key.replace(variable, match.group(variable[1:]))
+
+                            except IndexError:
+                                log.warn('rule "{0}" invalid cache key {1}'.format(rule.name, key))
+                                key = False
+                                break
+
+                        if key:
+
+                            if key in cache.cache:
+
+                                log.info('rule "{0}" triggered but ignored (found in cache)'.format(rule.name))
+                                occurences -= 1
+                                continue
+
+                            else:
+                                cache.add(key)
+
                     try:
-                        log.info('rule "{0}" triggered'.format(rule.name))
                         result = self.scripts[rule.script](rule, line, match)
                         log.info('rule "{0}" responded with "{1}"'.format(rule.name, result))
 
@@ -106,14 +189,14 @@ class LogScript:
                         occurences = 0
 
         except sh.SignalException_SIGTERM:
+            cache.save()
             pass
 
         return
 
     def start(self):
 
-        signal.signal(signal.SIGINT, self.stop)
-        signal.signal(signal.SIGTERM, self.stop)
+        log.info('** starting logscript **')
 
         if len(self.rules) == 0:
             print('no rules defined in {0}'.format(self.rule_directory))
@@ -130,6 +213,8 @@ class LogScript:
         return
 
     def stop(self, *args):
+
+        log.info('** stopping gracefully **')
 
         for t in self.tails:
             t.terminate()
@@ -149,6 +234,8 @@ if __name__ == '__main__':
     log.addHandler(handler)
 
     ls = LogScript()
+
+    signal.signal(signal.SIGTERM, ls.stop)
 
     try:
         ls.load_rules()
